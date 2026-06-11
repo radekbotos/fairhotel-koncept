@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FAIRHOTEL — Čtyřhvězda s přátelským přívlastkem | Brno</title>
+  <meta name="description" content="Butikový čtyřhvězdičkový hotel s restaurací fairko. a privátním wellness, pět minut od brněnského výstaviště. Rybářská 19, Brno.">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            ink:    { 950: '#1a1419', 900: '#251d24', 800: '#322631' },
+            cream:  { 50: '#f6f1e7', 100: '#efe8d9' },
+            accent: { 400: '#b35cb4', 500: '#963d97', 600: '#7c3280' },
+            terra:  { 400: '#b56450', 500: '#a14f3f', 600: '#8a4032' },
+            muted:  { 600: '#75696f' },
+            line:   { 100: '#e6dcd4', 800: '#3f3340' }
+          },
+          fontFamily: {
+            heading: ['Fraunces', 'serif'],
+            body: ['Inter', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --color-ink-950: #1a1419;
+      --color-ink-900: #251d24;
+      --color-ink-800: #322631;
+      --color-cream-50: #f6f1e7;
+      --color-cream-100: #efe8d9;
+      --color-accent-400: #b35cb4;
+      --color-accent-500: #963d97;
+      --color-accent-600: #7c3280;
+      --color-terra-400: #b56450;
+      --color-terra-500: #a14f3f;
+      --color-terra-600: #8a4032;
+      --color-text-900: #251d24;
+      --color-muted-600: #75696f;
+      --color-line-100: #e6dcd4;
+      --color-line-800: #3f3340;
+    }
+    /* archivní fotky mají zapečený tmavý overlay — vrátíme jas */
+    .img-restore { filter: brightness(1.8) contrast(1.04) saturate(1.12); }
+    html { scroll-behavior: smooth; }
+    section[id] { scroll-margin-top: 84px; }
+    /* sticky header solid stav — přidává JS (přejde do code blocku) */
+    .fh-header-solid { background-color: color-mix(in srgb, var(--color-ink-950) 92%, transparent); border-bottom: 1px solid var(--color-line-800); backdrop-filter: blur(8px); }
+  </style>
+</head>
+<body class="bg-[var(--color-cream-50)] text-[var(--color-text-900)] font-body antialiased">
+
+  <!-- token-anchor: vynutí emisi --color-* škál na solidpixels (viz skill gotcha #6) -->
+  <div aria-hidden="true" class="hidden bg-ink-950 bg-cream-50 bg-accent-500 bg-terra-500 text-ink-900 text-muted-600 border-line-100"></div>
+
+  <!-- ========== HEADER (symbol: site-header) ========== -->
+  <header id="fh-header" class="fixed top-0 inset-x-0 z-50 transition-all duration-300">
+    <div class="max-w-7xl mx-auto px-6 lg:px-10 h-[84px] flex items-center justify-between">
+      <a href="#" class="flex items-center"><img src="assets/fairhotel.svg" alt="FAIRHOTEL" class="h-7 w-auto"></a>
+      <nav class="hidden lg:flex items-center gap-9">
+        <a href="#pokoje" class="text-xs uppercase tracking-[0.22em] text-white/70 hover:text-white transition-colors">Pokoje</a>
+        <a href="#fairko" class="text-xs uppercase tracking-[0.22em] text-white/70 hover:text-white transition-colors">fairko.</a>
+        <a href="#wellness" class="text-xs uppercase tracking-[0.22em] text-white/70 hover:text-white transition-colors">Wellness</a>
+        <a href="#terasa" class="text-xs uppercase tracking-[0.22em] text-white/70 hover:text-white transition-colors">Terasa</a>
+        <a href="#konference" class="text-xs uppercase tracking-[0.22em] text-white/70 hover:text-white transition-colors">Konference</a>
+        <a href="#kontakt" class="text-xs uppercase tracking-[0.22em] text-white/70 hover:text-white transition-colors">Kontakt</a>
+      </nav>
+      <div class="flex items-center gap-4">
+        <a href="#kontakt" class="hidden md:inline-flex items-center gap-2 border border-[var(--color-accent-500)] text-[var(--color-accent-400)] hover:bg-[var(--color-accent-500)] hover:text-white px-6 py-2.5 text-xs uppercase tracking-[0.22em] font-semibold transition-colors">Rezervovat</a>
+        <button id="fh-burger" class="lg:hidden text-white p-2" aria-label="Menu">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+        </button>
+      </div>
+    </div>
+    <!-- mobilní menu -->
+    <div id="fh-mobilemenu" class="hidden lg:hidden bg-[var(--color-ink-950)] border-t border-[var(--color-line-800)] px-6 py-6 flex-col gap-5">
+      <a href="#pokoje" class="block py-2 text-sm uppercase tracking-[0.22em] text-white/80">Pokoje</a>
+      <a href="#fairko" class="block py-2 text-sm uppercase tracking-[0.22em] text-white/80">fairko.</a>
+      <a href="#wellness" class="block py-2 text-sm uppercase tracking-[0.22em] text-white/80">Wellness</a>
+      <a href="#terasa" class="block py-2 text-sm uppercase tracking-[0.22em] text-white/80">Terasa</a>
+      <a href="#konference" class="block py-2 text-sm uppercase tracking-[0.22em] text-white/80">Konference</a>
+      <a href="#kontakt" class="block py-2 text-sm uppercase tracking-[0.22em] text-[var(--color-accent-400)]">Rezervovat</a>
+    </div>
+  </header>
+
+  <!-- ========== HERO ========== -->
+  <section class="relative min-h-screen flex items-end overflow-hidden bg-[var(--color-ink-950)]">
+    <img src="assets/lobby.jpg" alt="Lobby FAIRHOTEL Brno" class="absolute inset-0 w-full h-full object-cover opacity-80">
+    <div class="absolute inset-0 bg-gradient-to-t from-ink-950 via-ink-950/40 to-ink-950/30"></div>
+    <div class="relative z-10 max-w-7xl mx-auto px-6 lg:px-10 pb-20 pt-44 w-full">
+      <p class="text-xs uppercase tracking-[0.3em] text-[var(--color-accent-400)] mb-6">Butikový hotel · Rybářská 19, Brno</p>
+      <h1 class="font-heading text-5xl md:text-7xl lg:text-[84px] leading-[1.04] text-white max-w-4xl">
+        Čtyřhvězda<br>s <em class="italic text-[var(--color-accent-400)]">přátelským</em> přívlastkem
+      </h1>
+      <p class="mt-7 text-lg text-white/75 max-w-xl leading-relaxed">
+        Hotel s restaurací fairko. a privátním wellness — pět minut od brněnského výstaviště, dvacet minut pěšky od centra.
+      </p>
+      <div class="mt-10 flex flex-col sm:flex-row gap-4">
+        <a href="#pokoje" class="inline-flex justify-center items-center bg-[var(--color-accent-500)] hover:bg-[var(--color-accent-600)] text-white px-9 py-4 text-xs uppercase tracking-[0.22em] font-semibold transition-colors">Chci se ubytovat</a>
+        <a href="#fairko" class="inline-flex justify-center items-center border border-white/40 hover:border-white text-white px-9 py-4 text-xs uppercase tracking-[0.22em] font-semibold transition-colors">Chci se najíst</a>
+      </div>
+      <div class="mt-14 flex flex-wrap items-center gap-x-10 gap-y-4 border-t border-white/15 pt-7">
+        <div class="flex items-center gap-3">
+          <span class="font-heading text-3xl text-white">9,2</span>
+          <span class="text-xs uppercase tracking-[0.18em] text-white/60 leading-tight">Booking.com<br>1 438 recenzí</span>
+        </div>
+        <div class="flex items-center gap-3">
+          <span class="font-heading text-3xl text-white">4,7</span>
+          <span class="text-xs uppercase tracking-[0.18em] text-white/60 leading-tight">Google<br>restaurace fairko.</span>
+        </div>
+        <div class="hidden md:flex items-center gap-3">
+          <span class="font-heading text-3xl text-white">28</span>
+          <span class="text-xs uppercase tracking-[0.18em] text-white/60 leading-tight">pokojů<br>a apartmá</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== O NÁS ========== -->
+  <section id="o-nas" class="py-24 lg:py-32">
+    <div class="max-w-7xl mx-auto px-6 lg:px-10 grid lg:grid-cols-2 gap-14 lg:gap-20 items-center">
+      <div class="order-2 lg:order-1">
+        <p class="text-xs uppercase tracking-[0.3em] text-[var(--color-accent-600)] mb-5">Náš příběh</p>
+        <h2 class="font-heading text-4xl lg:text-5xl leading-[1.12]">Z továrny u Svratky <em class="italic text-[var(--color-accent-600)]">hotelem</em>, kde nejste „no name"</h2>
+        <div class="mt-7 space-y-5 text-[var(--color-muted-600)] leading-[1.75]">
+          <p>Z bývalé továrny u řeky Svratky se v roce 2016 stal FAIRHOTEL. Vedení se ujala dcera majitelů Kamila a s vervou hráčky ragby se pustila do boření mýtů o hotelových restauracích. Do týmu přibrala zkušenou Ivu, která s klidem krotí příliš hrr nápady. Jin a jang na Rybářské.</p>
+          <p>Na recepci potkáte Evu alias paní Colombovou, za barem vládne Katka a v kuchyni naše tajné želízko v ohni, Simona. Girl power! Jsme malý hotel, kde se vám opravdu věnujeme — a hosté to v recenzích píší pořád dokola.</p>
+        </div>
+        <div class="mt-9 flex flex-wrap gap-x-8 gap-y-3 text-sm">
+          <span class="flex items-center gap-2"><span class="w-1.5 h-1.5 bg-[var(--color-terra-500)]"></span>5 minut od výstaviště BVV</span>
+          <span class="flex items-center gap-2"><span class="w-1.5 h-1.5 bg-[var(--color-terra-500)]"></span>20 minut pěšky do centra</span>
+          <span class="flex items-center gap-2"><span class="w-1.5 h-1.5 bg-[var(--color-terra-500)]"></span>Parkování u hotelu</span>
+        </div>
+      </div>
+      <div class="order-1 lg:order-2 relative">
+        <img src="assets/bg_rest4-2.jpg" alt="Stůl ve fairku s podtácky FAIR CAFE" class="img-restore w-full aspect-[4/5] object-cover">
+        <div class="absolute -bottom-6 -left-6 bg-[var(--color-terra-500)] text-white px-8 py-6 hidden md:block">
+          <p class="font-heading text-3xl">2016</p>
+          <p class="text-xs uppercase tracking-[0.18em] text-white/70 mt-1">rodinný hotel od založení</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== POKOJE ========== -->
+  <section id="pokoje" class="py-24 lg:py-32 bg-[var(--color-cream-100)]">
+    <div class="max-w-7xl mx-auto px-6 lg:px-10">
+      <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-14">
+        <div>
+          <p class="text-xs uppercase tracking-[0.3em] text-[var(--color-accent-600)] mb-5">Ubytování</p>
+          <h2 class="font-heading text-4xl lg:text-5xl leading-[1.12]">Pokoje, ze kterých se<br>vám nebude chtít</h2>
+        </div>
+        <p class="text-[var(--color-muted-600)] max-w-sm leading-[1.75]">Klimatizace, blackout závěsy a postele, které hosté na Bookingu zmiňují častěji než snídani. A to už je co říct.</p>
+      </div>
+      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <!-- card -->
+        <div class="group bg-[var(--color-cream-50)] border border-[var(--color-line-100)]">
+          <div class="overflow-hidden">
+            <img src="assets/bg_pokoje3.jpg" alt="Single room — koupelna s kosmetikou Four Elements" class="img-restore w-full aspect-[4/3] object-cover group-hover:scale-105 transition-transform duration-500">
+          </div>
+          <div class="p-7">
+            <h3 class="font-heading text-2xl">Single room</h3>
+            <p class="mt-3 text-sm text-[var(--color-muted-600)] leading-[1.7]">Za byznysem i na chvíli od ostatních. Jednoduché linie, pohodlná postel, prostorná koupelna. Prostě relax.</p>
+            <p class="mt-5 text-xs uppercase tracking-[0.18em] text-[var(--color-accent-600)]">1 osoba · 20 m²</p>
+          </div>
+        </div>
+        <div class="group bg-[var(--color-cream-50)] border border-[var(--color-line-100)]">
+          <div class="overflow-hidden">
+            <img src="assets/bg_pokoje.jpg" alt="Double room — manželská postel" class="img-restore w-full aspect-[4/3] object-cover group-hover:scale-105 transition-transform duration-500">
+          </div>
+          <div class="p-7">
+            <h3 class="font-heading text-2xl">Double room</h3>
+            <p class="mt-3 text-sm text-[var(--color-muted-600)] leading-[1.7]">Jako dělaný pro romantický víkend ve dvou. Bambusové matrace, blackout závěsy — a v suterénu privátní wellness.</p>
+            <p class="mt-5 text-xs uppercase tracking-[0.18em] text-[var(--color-accent-600)]">2 osoby · 23 m² · možnost twin</p>
+          </div>
+        </div>
+        <div class="group bg-[var(--color-cream-50)] border border-[var(--color-line-100)]">
+          <div class="overflow-hidden">
+            <img src="https://images.unsplash.com/photo-1611892440504-42a792e24d32?q=80&w=1200&auto=format&fit=crop" alt="Junior suite" class="w-full aspect-[4/3] object-cover group-hover:scale-105 transition-transform duration-500">
+          </div>
+          <div class="p-7">
+            <h3 class="font-heading text-2xl">Junior Suite</h3>
+            <p class="mt-3 text-sm text-[var(--color-muted-600)] leading-[1.7]">Prostor pro rodinu — vejde se postýlka i přistýlka. Župan a pantofle v ceně, dětské menu ve fairku.</p>
+            <p class="mt-5 text-xs uppercase tracking-[0.18em] text-[var(--color-accent-600)]">2–3 osoby · 34 m²</p>
+          </div>
+        </div>
+        <div class="group bg-[var(--color-cream-50)] border border-[var(--color-line-100)]">
+          <div class="overflow-hidden">
+            <img src="assets/bg_pokoje2.jpg" alt="Suite — ložnice s odděleným obývacím pokojem" class="img-restore w-full aspect-[4/3] object-cover group-hover:scale-105 transition-transform duration-500">
+          </div>
+          <div class="p-7">
+            <h3 class="font-heading text-2xl">Suite</h3>
+            <p class="mt-3 text-sm text-[var(--color-muted-600)] leading-[1.7]">Ložnice a oddělený obývací pokoj. Pro velké rodiny, skupiny přátel — nebo zážitek hodný rockové hvězdy.</p>
+            <p class="mt-5 text-xs uppercase tracking-[0.18em] text-[var(--color-accent-600)]">2–4 osoby · 40 m²</p>
+          </div>
+        </div>
+      </div>
+      <div class="mt-12 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 border-t border-[var(--color-line-100)] pt-8">
+        <p class="text-sm text-[var(--color-muted-600)]">Check-in 15:00–22:00 · check-out do 12:00 · mazlíčci po domluvě vítáni</p>
+        <a href="#kontakt" class="inline-flex items-center bg-[var(--color-ink-950)] hover:bg-[var(--color-ink-800)] text-white px-9 py-4 text-xs uppercase tracking-[0.22em] font-semibold transition-colors">Rezervovat pokoj</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== FAIRKO ========== -->
+  <section id="fairko" class="py-24 lg:py-32 bg-[var(--color-ink-950)] text-white">
+    <div class="max-w-7xl mx-auto px-6 lg:px-10 grid lg:grid-cols-2 gap-14 lg:gap-20 items-center">
+      <div class="relative">
+        <img src="assets/restaurace.jpg" alt="Plný stůl ve fairku — řízek, svíčková a další klasiky" class="w-full aspect-[4/5] object-cover">
+        <div class="absolute -bottom-6 -right-6 bg-[var(--color-accent-500)] text-white px-8 py-6 hidden md:block">
+          <p class="font-heading text-3xl">4,7 / 5</p>
+          <p class="text-xs uppercase tracking-[0.18em] text-white/80 mt-1">350+ recenzí na Google</p>
+        </div>
+      </div>
+      <div>
+        <p class="text-xs uppercase tracking-[0.3em] text-[var(--color-accent-400)] mb-5">Restaurace</p>
+        <h2 class="font-heading text-4xl lg:text-5xl leading-[1.12]">fairko<em class="italic text-[var(--color-accent-400)]">.</em> — restaurace, kvůli které se vracejí i Brňáci</h2>
+        <p class="mt-7 text-white/70 leading-[1.75] max-w-lg">Každý den je u nás jako u babičky v neděli. Milované klasiky občas proložíme něčím ze světa — ale svíčkovou a řízek máme vždy. Čepujeme Plzeň, kávu vaříme z Rebelbean a voda je vždy zdarma.</p>
+        <ul class="mt-9 space-y-4 border-t border-[var(--color-line-800)] pt-8">
+          <li class="flex items-baseline justify-between gap-6">
+            <span class="font-heading text-lg">Svíčková na smetaně s karlovarským knedlíkem</span>
+            <span class="flex-1 border-b border-dotted border-[var(--color-line-800)]"></span>
+            <span class="text-[var(--color-accent-400)] whitespace-nowrap">320 Kč</span>
+          </li>
+          <li class="flex items-baseline justify-between gap-6">
+            <span class="font-heading text-lg">Telecí řízek smažený na sádle</span>
+            <span class="flex-1 border-b border-dotted border-[var(--color-line-800)]"></span>
+            <span class="text-[var(--color-accent-400)] whitespace-nowrap">380 Kč</span>
+          </li>
+          <li class="flex items-baseline justify-between gap-6">
+            <span class="font-heading text-lg">Hovězí smash burger s tallegiem</span>
+            <span class="flex-1 border-b border-dotted border-[var(--color-line-800)]"></span>
+            <span class="text-[var(--color-accent-400)] whitespace-nowrap">345 Kč</span>
+          </li>
+          <li class="flex items-baseline justify-between gap-6">
+            <span class="font-heading text-lg">Pečený losos na salátu s citrusy</span>
+            <span class="flex-1 border-b border-dotted border-[var(--color-line-800)]"></span>
+            <span class="text-[var(--color-accent-400)] whitespace-nowrap">285 Kč</span>
+          </li>
+        </ul>
+        <div class="mt-9 flex flex-col sm:flex-row sm:items-center gap-6">
+          <a href="#kontakt" class="inline-flex justify-center items-center bg-[var(--color-accent-500)] hover:bg-[var(--color-accent-600)] text-white px-9 py-4 text-xs uppercase tracking-[0.22em] font-semibold transition-colors">Rezervovat stůl</a>
+          <p class="text-sm text-white/55">po–so 7:00–22:00 · ne 7:00–18:00<br>snídaně denně 7:00–10:00 i pro nehotelové hosty</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== WELLNESS ========== -->
+  <section id="wellness" class="py-24 lg:py-32">
+    <div class="max-w-7xl mx-auto px-6 lg:px-10 grid lg:grid-cols-2 gap-14 lg:gap-20 items-center">
+      <div>
+        <p class="text-xs uppercase tracking-[0.3em] text-[var(--color-accent-600)] mb-5">Privátní wellness</p>
+        <h2 class="font-heading text-4xl lg:text-5xl leading-[1.12]">Sauna jen <em class="italic text-[var(--color-accent-600)]">pro vás</em> dva. Nebo pro partu</h2>
+        <p class="mt-7 text-[var(--color-muted-600)] leading-[1.75] max-w-lg">V suterénu najdete finskou i parní saunu a sprchu s chromoterapií — a celé wellness si rezervujete jen pro sebe. Otevřené je i pro nehotelové hosty, a když dáte vědět předem, zajistíme i thajskou masáž. Zavolejte na recepci a za hodinu se můžete saunovat.</p>
+        <div class="mt-9 grid grid-cols-3 gap-6 border-t border-[var(--color-line-100)] pt-8 max-w-lg">
+          <div>
+            <p class="font-heading text-2xl">Finská</p>
+            <p class="text-xs uppercase tracking-[0.18em] text-[var(--color-muted-600)] mt-1">sauna až 90 °C</p>
+          </div>
+          <div>
+            <p class="font-heading text-2xl">Parní</p>
+            <p class="text-xs uppercase tracking-[0.18em] text-[var(--color-muted-600)] mt-1">v Brně jako v tropech</p>
+          </div>
+          <div>
+            <p class="font-heading text-2xl">900 Kč</p>
+            <p class="text-xs uppercase tracking-[0.18em] text-[var(--color-muted-600)] mt-1">privátních 90 minut</p>
+          </div>
+        </div>
+        <div class="mt-9 flex flex-col sm:flex-row sm:items-center gap-6">
+          <a href="#kontakt" class="inline-flex justify-center items-center border border-[var(--color-ink-950)] hover:bg-[var(--color-ink-950)] hover:text-white px-9 py-4 text-xs uppercase tracking-[0.22em] font-semibold transition-colors">Rezervovat wellness</a>
+          <p class="text-sm text-[var(--color-muted-600)]">denně 8:00–20:30 · osuška, prostěradlo,<br>kosmetika i čaj v ceně</p>
+        </div>
+      </div>
+      <img src="https://images.unsplash.com/photo-1583416750470-965b2707b355?q=80&w=1400&auto=format&fit=crop" alt="Privátní sauna" class="w-full aspect-[4/3] object-cover">
+    </div>
+  </section>
+
+  <!-- ========== TERASA ========== -->
+  <section id="terasa" class="relative py-28 lg:py-40 overflow-hidden bg-[var(--color-ink-950)]">
+    <img src="https://images.unsplash.com/photo-1470337458703-46ad1756a187?q=80&w=2000&auto=format&fit=crop" alt="Střešní terasa" class="absolute inset-0 w-full h-full object-cover opacity-40">
+    <div class="absolute inset-0 bg-gradient-to-r from-ink-950/90 via-ink-950/50 to-transparent"></div>
+    <div class="relative z-10 max-w-7xl mx-auto px-6 lg:px-10">
+      <p class="text-xs uppercase tracking-[0.3em] text-[var(--color-accent-400)] mb-5">Střešní terasa</p>
+      <h2 class="font-heading text-4xl lg:text-5xl leading-[1.12] text-white max-w-2xl">Brno jako na dlani — s drinkem v ruce</h2>
+      <p class="mt-7 text-white/70 leading-[1.75] max-w-xl">Letní posezení s výhledem na město, ranní jóga nad střechami, grilovačky i soukromé akce. Terasu si můžete pronajmout celou — v sezóně bývá o víkendech plno, tak s předstihem.</p>
+      <div class="mt-10 flex flex-wrap gap-3">
+        <span class="border border-white/25 text-white/80 px-5 py-2 text-xs uppercase tracking-[0.18em]">Letní jóga</span>
+        <span class="border border-white/25 text-white/80 px-5 py-2 text-xs uppercase tracking-[0.18em]">Grilování</span>
+        <span class="border border-white/25 text-white/80 px-5 py-2 text-xs uppercase tracking-[0.18em]">Soukromé akce</span>
+        <span class="border border-white/25 text-white/80 px-5 py-2 text-xs uppercase tracking-[0.18em]">Západy slunce</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== KONFERENCE ========== -->
+  <section id="konference" class="py-24 lg:py-32 bg-[var(--color-cream-100)]">
+    <div class="max-w-7xl mx-auto px-6 lg:px-10 grid lg:grid-cols-2 gap-14 lg:gap-20 items-center">
+      <img src="https://images.unsplash.com/photo-1517502884422-41eaead166d4?q=80&w=1400&auto=format&fit=crop" alt="Konferenční místnost" class="w-full aspect-[4/3] object-cover">
+      <div>
+        <p class="text-xs uppercase tracking-[0.3em] text-[var(--color-accent-600)] mb-5">Konference &amp; firemní akce</p>
+        <h2 class="font-heading text-4xl lg:text-5xl leading-[1.12]">Meeting pět minut od výstaviště</h2>
+        <p class="mt-7 text-[var(--color-muted-600)] leading-[1.75] max-w-lg">Školení, konference nebo seminář v docházkové vzdálenosti od výstaviště i Mendlova náměstí. Občerstvení a oběd nachystáme, přespání zajistíme. A po práci legraci — drink na terase nebo privátní wellness.</p>
+        <ul class="mt-9 space-y-3 text-sm">
+          <li class="flex items-center gap-3"><span class="w-1.5 h-1.5 bg-[var(--color-terra-500)]"></span>2 klimatizované místnosti — 40 m² a 57 m², až 48 osob</li>
+          <li class="flex items-center gap-3"><span class="w-1.5 h-1.5 bg-[var(--color-terra-500)]"></span>Projektor, ozvučení, flipchart i notebook k zapůjčení</li>
+          <li class="flex items-center gap-3"><span class="w-1.5 h-1.5 bg-[var(--color-terra-500)]"></span>Coffee breaky na míru — klidně na střešní terase</li>
+        </ul>
+        <a href="#kontakt" class="mt-9 inline-flex items-center border border-[var(--color-ink-950)] hover:bg-[var(--color-ink-950)] hover:text-white px-9 py-4 text-xs uppercase tracking-[0.22em] font-semibold transition-colors">Poptat termín</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== RECENZE ========== -->
+  <section id="recenze" class="py-24 lg:py-32">
+    <div class="max-w-7xl mx-auto px-6 lg:px-10">
+      <div class="text-center max-w-2xl mx-auto mb-16">
+        <p class="text-xs uppercase tracking-[0.3em] text-[var(--color-accent-600)] mb-5">Hosté o nás</p>
+        <h2 class="font-heading text-4xl lg:text-5xl leading-[1.12]">9,2 z 10 na Booking.com.<br><em class="italic text-[var(--color-accent-600)]">A tady je proč</em></h2>
+      </div>
+      <div class="grid md:grid-cols-3 gap-6">
+        <figure class="bg-[var(--color-cream-100)] border border-[var(--color-line-100)] p-9 flex flex-col">
+          <p class="font-heading text-xl leading-snug">„Krásný, čistý, vkusně zařízený hotel s milým mladým personálem. Vynikající snídaně i večeře — navíc za rozumnou cenu."</p>
+          <figcaption class="mt-auto pt-7 text-xs uppercase tracking-[0.18em] text-[var(--color-muted-600)]">Daniel · Booking.com</figcaption>
+        </figure>
+        <figure class="bg-[var(--color-ink-950)] text-white p-9 flex flex-col">
+          <p class="font-heading text-xl leading-snug">„Zatím nejlepší ubytování v Brně, co jsem mohla vyzkoušet při služebních cestách."</p>
+          <figcaption class="mt-auto pt-7 text-xs uppercase tracking-[0.18em] text-white/55">Dana · Booking.com</figcaption>
+        </figure>
+        <figure class="bg-[var(--color-cream-100)] border border-[var(--color-line-100)] p-9 flex flex-col">
+          <p class="font-heading text-xl leading-snug">„Čekal jsem univerzální hotel vedle BVV, ale tohle je opravdu moderní hotel. Je to o detailech."</p>
+          <figcaption class="mt-auto pt-7 text-xs uppercase tracking-[0.18em] text-[var(--color-muted-600)]">David · Booking.com</figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== KONTAKT + CTA ========== -->
+  <section id="kontakt" class="py-24 lg:py-32 bg-[var(--color-ink-950)] text-white">
+    <div class="max-w-7xl mx-auto px-6 lg:px-10">
+      <div class="grid lg:grid-cols-2 gap-14 lg:gap-20">
+        <div>
+          <p class="text-xs uppercase tracking-[0.3em] text-[var(--color-accent-400)] mb-5">Rezervace &amp; kontakt</p>
+          <h2 class="font-heading text-4xl lg:text-5xl leading-[1.12]">Přijeďte. Rádi vás <em class="italic text-[var(--color-accent-400)]">uvidíme</em></h2>
+          <p class="mt-7 text-white/70 leading-[1.75] max-w-md">Nejvýhodnější cenu dostanete vždy přímo u nás — napište, zavolejte, nebo se prostě zastavte na kafe do fairka.</p>
+          <div class="mt-10 space-y-5">
+            <a href="tel:+420530513560" class="flex items-center gap-4 group">
+              <span class="w-11 h-11 border border-[var(--color-line-800)] flex items-center justify-center text-[var(--color-accent-400)]">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+              </span>
+              <span class="text-lg group-hover:text-[var(--color-accent-400)] transition-colors">+420 530 513 560</span>
+            </a>
+            <a href="mailto:hotel@fairhotel.cz" class="flex items-center gap-4 group">
+              <span class="w-11 h-11 border border-[var(--color-line-800)] flex items-center justify-center text-[var(--color-accent-400)]">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 6L2 7"/></svg>
+              </span>
+              <span class="text-lg group-hover:text-[var(--color-accent-400)] transition-colors">hotel@fairhotel.cz</span>
+            </a>
+            <div class="flex items-center gap-4">
+              <span class="w-11 h-11 border border-[var(--color-line-800)] flex items-center justify-center text-[var(--color-accent-400)]">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+              </span>
+              <span class="text-lg">Rybářská 19, 603 00 Brno</span>
+            </div>
+          </div>
+          <div class="mt-10 flex gap-4">
+            <a href="https://www.instagram.com/fairhotel/" target="_blank" rel="noopener" class="w-11 h-11 border border-[var(--color-line-800)] flex items-center justify-center text-white/70 hover:text-[var(--color-accent-400)] hover:border-[var(--color-accent-500)] transition-colors" aria-label="Instagram">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="0.5" fill="currentColor"/></svg>
+            </a>
+            <a href="https://www.facebook.com/faircaferestaurant" target="_blank" rel="noopener" class="w-11 h-11 border border-[var(--color-line-800)] flex items-center justify-center text-white/70 hover:text-[var(--color-accent-400)] hover:border-[var(--color-accent-500)] transition-colors" aria-label="Facebook">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+            </a>
+          </div>
+        </div>
+        <div>
+          <iframe title="Mapa — FAIRHOTEL Brno" src="https://www.openstreetmap.org/export/embed.html?bbox=16.5770%2C49.1808%2C16.5970%2C49.1908&amp;layer=mapnik&amp;marker=49.1858%2C16.5870" class="w-full aspect-[4/3] grayscale invert-[0.9] contrast-[0.9] border border-[var(--color-line-800)]" loading="lazy"></iframe>
+          <a href="https://maps.google.com/?q=FAIRHOTEL,+Ryb%C3%A1%C5%99sk%C3%A1+19,+Brno" target="_blank" rel="noopener" class="inline-flex items-center gap-2 mt-4 text-xs uppercase tracking-[0.18em] text-[var(--color-accent-400)] hover:text-white transition-colors">Otevřít v Google Maps →</a>
+          <div class="grid grid-cols-2 gap-6 mt-8 text-sm">
+            <div>
+              <p class="text-xs uppercase tracking-[0.18em] text-[var(--color-accent-400)] mb-2">Hotel</p>
+              <p class="text-white/70">recepce nonstop<br>check-in 15:00–22:00</p>
+            </div>
+            <div>
+              <p class="text-xs uppercase tracking-[0.18em] text-[var(--color-accent-400)] mb-2">fairko.</p>
+              <p class="text-white/70">po–so 7:00–22:00<br>ne 7:00–18:00</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== FOOTER (symbol: site-footer) ========== -->
+  <footer class="bg-[var(--color-ink-950)] border-t border-[var(--color-line-800)] py-10">
+    <div class="max-w-7xl mx-auto px-6 lg:px-10 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-white/40">
+      <img src="assets/fairhotel.svg" alt="FAIRHOTEL" class="h-5 w-auto opacity-90">
+      <p>FAIRHOTEL s. r. o. · IČO 01611623 · Rybářská 19, 603 00 Brno</p>
+      <p>© 2016–2026 FAIRHOTEL</p>
+    </div>
+  </footer>
+
+  <!-- JS pro lokální preview (před deployem do solidpixels přesunout do code blocku) -->
+  <script>
+    (function () {
+      var header = document.getElementById('fh-header');
+      var onScroll = function () {
+        header.classList.toggle('fh-header-solid', window.scrollY > 40);
+      };
+      window.addEventListener('scroll', onScroll, { passive: true });
+      onScroll();
+
+      var burger = document.getElementById('fh-burger');
+      var menu = document.getElementById('fh-mobilemenu');
+      burger.addEventListener('click', function () {
+        menu.classList.toggle('hidden');
+        header.classList.add('fh-header-solid');
+      });
+      menu.querySelectorAll('a').forEach(function (a) {
+        a.addEventListener('click', function () { menu.classList.add('hidden'); });
+      });
+    })();
+  </script>
+
+</body>
+</html>

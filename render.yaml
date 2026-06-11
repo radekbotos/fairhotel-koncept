@@ -1,0 +1,6 @@
+services:
+  - type: web
+    name: fairhotel-koncept
+    runtime: static
+    buildCommand: ""
+    staticPublishPath: .

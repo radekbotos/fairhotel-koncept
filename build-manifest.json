@@ -1,0 +1,37 @@
+{
+  "project": "FAIRHOTEL Brno — one-page web",
+  "created": "2026-06-11",
+  "status": "local-ready",
+  "tokens": "tokens.json",
+  "pages": [
+    { "file": "pages/index.html", "slug": "/", "title": "FAIRHOTEL — Čtyřhvězda s přátelským přívlastkem", "priority": "critical" }
+  ],
+  "assets": {
+    "note": "Reálné assety stažené z Wayback (web.archive.org, snapshoty 2026-01/2026-03) v pages/assets/. Archivní bg_* fotky mají zapečený tmavý overlay — v HTML se zesvětlují třídou .img-restore; před deployem ideálně získat originály od klienta. Zbylé placeholdery (Unsplash): junior suite, wellness sauna, terasa, konference — archiv je neměl, CDX potvrdil 0 captures.",
+    "real": [
+      { "file": "assets/lobby.jpg",        "use": "hero",            "source": "fairhotel.cz/css49/lobby.jpg (archiv)" },
+      { "file": "assets/fairhotel.svg",    "use": "logo header+footer (bílé)", "source": "fairhotel.cz/css49/fairhotel.svg" },
+      { "file": "assets/fairhotel-bk.svg", "use": "rezerva (černá varianta loga)", "source": "fairhotel.cz/css49/fairhotel-bk.svg" },
+      { "file": "assets/bg_rest4-2.jpg",   "use": "o-nas (img-restore)", "source": "css49/bg_rest4-2.jpg" },
+      { "file": "assets/restaurace.jpg",   "use": "fairko",          "source": "css49/restaurace.jpg" },
+      { "file": "assets/bg_pokoje.jpg",    "use": "double room (img-restore)", "source": "css49/bg_pokoje.jpg" },
+      { "file": "assets/bg_pokoje2.jpg",   "use": "suite (img-restore)", "source": "css49/bg_pokoje2.jpg" },
+      { "file": "assets/bg_pokoje3.jpg",   "use": "single room — koupelna (img-restore)", "source": "css49/bg_pokoje3.jpg" },
+      { "file": "assets/bg_rest5-8.jpg",   "use": "nepoužité (zásoba: jídla na tmavém)", "source": "css49/bg_rest5..8.jpg" }
+    ],
+    "placeholders": [
+      { "use": "junior suite", "wanted": "fotka pokoje od klienta" },
+      { "use": "wellness",     "wanted": "privátní sauna FAIRHOTEL" },
+      { "use": "terasa",       "wanted": "střešní terasa s výhledem na Brno" },
+      { "use": "konference",   "wanted": "konferenční místnost FAIRHOTEL" }
+    ]
+  },
+  "research": {
+    "booking": { "score": 9.2, "reviews": 1438, "hotelId": 1483232, "praised": ["postele", "čistota", "snídaně", "personál", "klid", "klimatizace"] },
+    "google_fairko": { "score": 4.7, "reviews": 350 },
+    "instagram": "https://www.instagram.com/fairhotel/",
+    "facebook": "https://www.facebook.com/faircaferestaurant",
+    "contact": { "phone": "+420 530 513 560", "email": "hotel@fairhotel.cz", "address": "Rybářská 19, 603 00 Brno", "ico": "01611623" },
+    "note": "fairhotel.cz je k 11. 6. 2026 DOWN (HTTP 503, MySQL error) — obsah čerpán z archivu 21. 1. 2026"
+  }
+}
